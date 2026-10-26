@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { getStoredEntries, saveEntriesToStorage, formatDateDisplay, getTodayDateString, STORAGE_KEY } from './storage';
 import { DiaryEntry } from '../types/diary';
 
@@ -42,9 +42,11 @@ describe('storage utility', () => {
   });
 
   it('handles invalid JSON in localStorage gracefully', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
     localStorage.setItem(STORAGE_KEY, 'invalid-json{{{');
     const entries = getStoredEntries();
     expect(entries).toEqual([]);
+    spy.mockRestore();
   });
 
   it('formats display dates correctly', () => {

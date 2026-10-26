@@ -232,4 +232,52 @@ describe('Personal Diary App', () => {
     expect(screen.getByText('Biking in the park')).toBeInTheDocument();
     expect(screen.queryByText('Reading books')).not.toBeInTheDocument();
   });
+
+  it('allows opening entry details by clicking entry title and closing with Escape key', () => {
+    const existingEntries: DiaryEntry[] = [
+      {
+        id: 'entry-1',
+        title: 'Star Gazing Night',
+        date: '2025-06-21',
+        content: 'Saw Jupiter and Saturn clearly through the telescope.',
+        mood: '✨',
+        createdAt: '2025-06-21T22:00:00.000Z',
+      },
+    ];
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(existingEntries));
+    render(<App />);
+
+    // Click title
+    fireEvent.click(screen.getByText('Star Gazing Night'));
+
+    // Modal dialog is opened
+    const modal = screen.getByRole('dialog');
+    expect(modal).toBeInTheDocument();
+    expect(within(modal).getByText(/Saw Jupiter and Saturn clearly/i)).toBeInTheDocument();
+
+    // Press Escape
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('displays no matching entries message when search yields nothing', () => {
+    const existingEntries: DiaryEntry[] = [
+      {
+        id: 'entry-1',
+        title: 'Morning Run',
+        date: '2025-01-01',
+        content: 'Ran 5k around the lake.',
+        createdAt: '2025-01-01T08:00:00.000Z',
+      },
+    ];
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(existingEntries));
+    render(<App />);
+
+    const searchInput = screen.getByRole('textbox', { name: /Search entries/i });
+    fireEvent.change(searchInput, { target: { value: 'nonexistent query' } });
+
+    expect(screen.getByText(/No matching entries found/i)).toBeInTheDocument();
+  });
 });

@@ -1,0 +1,1 @@
+{"root":["./src/App.test.tsx","./src/App.tsx","./src/main.tsx","./src/components/EntryCard.tsx","./src/components/EntryDetailModal.tsx","./src/components/EntryForm.tsx","./src/components/EntryList.tsx","./src/components/Header.tsx","./src/test/setup.ts","./src/types/diary.ts","./src/utils/storage.test.ts","./src/utils/storage.ts"],"version":"5.9.3"}
